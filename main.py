@@ -6,17 +6,14 @@ config = dotenv_values(".env")
 DISCORD_TOKEN = config["DISCORD_TOKEN"]
 GUILD_ID = int(config["GUILD_ID"])
 
-intents=discord.Intents.default()
-intents.members=True
+intents = discord.Intents.default()
+intents.members = True
 
 client = discord.Client(intents=intents)
 
 
-
-
 @client.event
 async def on_ready():
-
     roles_list = ["Name"]
     members_list = []
     members_dict = {}
@@ -52,7 +49,8 @@ async def on_ready():
         data = []
 
     df = df.sort_values(by=["Name"])
-    df.to_csv("data/member.csv",index=False)
+    df.to_csv("data/member.csv", index=False)
     print("success")
+
 
 client.run(DISCORD_TOKEN)
