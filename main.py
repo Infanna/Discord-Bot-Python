@@ -11,15 +11,19 @@ intents.members=True
 
 client = discord.Client(intents=intents)
 
-roles_list = ["Name"]
-members_list = []
-members_dict = {}
-data = []
+
+
 
 @client.event
 async def on_ready():
-    
+
+    roles_list = ["Name"]
+    members_list = []
+    members_dict = {}
+    data = []
+
     print(f"{client.user} has connected to Discord!")
+
     guild = client.get_guild(GUILD_ID)
 
     roles = guild.roles
@@ -44,11 +48,11 @@ async def on_ready():
             else:
                 data.append(0)
         data[0] = name
-        print(data)
         df.loc[len(df.index)] = data
         data = []
 
+    df = df.sort_values(by=["Name"])
     df.to_csv("data/member.csv",index=False)
-
+    print("success")
 
 client.run(DISCORD_TOKEN)
