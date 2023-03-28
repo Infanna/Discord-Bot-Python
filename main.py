@@ -55,7 +55,7 @@ async def on_ready():
     df.to_csv(f"data/{csv_name}", index=False)
     print(f"success save file {csv_name}")
 
-    #================ Channal ===================
+    #================ Text Channal ===================
 
     ArrayList = []
     MemberList = []
@@ -101,7 +101,7 @@ async def on_ready():
         df.loc[len(df.index)] = data
 
     df = df.sort_values(by=["Name"])
-    csv_name = "members_in_channels.csv"
+    csv_name = "members_in_text_channels.csv"
     df.to_csv(f"data/{csv_name}", index=False)
     print(f"success save file {csv_name}")
 
