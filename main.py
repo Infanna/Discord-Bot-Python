@@ -16,7 +16,7 @@ client = discord.Client(intents=intents)
 async def on_ready():
     print(f"{client.user} has connected to Discord!")
 
-    #================ Roles ===================
+    # ================ Roles ===================
 
     roles_list = ["Name"]
     members_list = []
@@ -27,14 +27,14 @@ async def on_ready():
 
     roles = guild.roles
     for role in roles:
-        if role.is_bot_managed() == False:
+        if not role.is_bot_managed():
             roles_list.append(role.name)
 
     df = pd.DataFrame(columns=roles_list)
 
     members = guild.members
     for member in members:
-        if member.bot == False:
+        if not member.bot:
             for r in member.roles:
                 members_list.append(r.name)
             members_dict[member.name] = members_list
@@ -55,7 +55,7 @@ async def on_ready():
     df.to_csv(f"data/{csv_name}", index=False)
     print(f"success save file {csv_name}")
 
-    #================ Text Channal ===================
+    # ================ Text Channal ===================
 
     ArrayList = []
     MemberList = []
@@ -63,7 +63,7 @@ async def on_ready():
     TextChannelMemberDict = {}
 
     for member in guild.members:
-        if member.bot == False:
+        if not member.bot:
             MemberList.append(member.name)
 
     TextChannels = guild.text_channels
@@ -72,7 +72,7 @@ async def on_ready():
         TextChannelName = TextChannel.name
         TextChannelNameList.append(TextChannelName)
         for TextChannelMember in TextChannel.members:
-            if TextChannelMember.bot == False:
+            if not TextChannelMember.bot:
                 TextChannelMemberList.append(TextChannelMember.name)
         TextChannelMemberDict[TextChannelName] = TextChannelMemberList
 
@@ -82,12 +82,12 @@ async def on_ready():
     TextChannelMemberDict = {}
 
     for MemberName in MemberList:
-        data = []   
+        data = []
         for Datalist in ArrayList:
             if MemberName in Datalist:
                 data.append(Datalist[0])
             TextChannelMemberDict[MemberName] = data
-         
+
     df = pd.DataFrame(columns=TextChannelNameList)
 
     for name in TextChannelMemberDict:
@@ -105,5 +105,5 @@ async def on_ready():
     df.to_csv(f"data/{csv_name}", index=False)
     print(f"success save file {csv_name}")
 
-client.run(DISCORD_TOKEN)
 
+client.run(DISCORD_TOKEN)
