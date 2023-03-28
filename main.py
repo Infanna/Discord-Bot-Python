@@ -14,12 +14,14 @@ client = discord.Client(intents=intents)
 
 @client.event
 async def on_ready():
+    print(f"{client.user} has connected to Discord!")
+
+    #================ Channal ===================
+
     roles_list = ["Name"]
     members_list = []
     members_dict = {}
     data = []
-
-    print(f"{client.user} has connected to Discord!")
 
     guild = client.get_guild(GUILD_ID)
 
@@ -49,8 +51,59 @@ async def on_ready():
         data = []
 
     df = df.sort_values(by=["Name"])
-    df.to_csv("data/member.csv", index=False)
-    print("success")
+    csv_name = "members_in_roles.csv"
+    df.to_csv(f"data/{csv_name}", index=False)
+    print(f"success save file {csv_name}")
 
+    #================ Channal ===================
+
+    ArrayList = []
+    MemberList = []
+    TextChannelNameList = ["Name"]
+    TextChannelMemberDict = {}
+
+    for member in guild.members:
+        if member.bot == False:
+            MemberList.append(member.name)
+
+    TextChannels = guild.text_channels
+    for TextChannel in TextChannels:
+        TextChannelMemberList = []
+        TextChannelName = TextChannel.name
+        TextChannelNameList.append(TextChannelName)
+        for TextChannelMember in TextChannel.members:
+            if TextChannelMember.bot == False:
+                TextChannelMemberList.append(TextChannelMember.name)
+        TextChannelMemberDict[TextChannelName] = TextChannelMemberList
+
+    for key, val in TextChannelMemberDict.items():
+        ArrayList.append([key] + val)
+
+    TextChannelMemberDict = {}
+
+    for MemberName in MemberList:
+        data = []   
+        for Datalist in ArrayList:
+            if MemberName in Datalist:
+                data.append(Datalist[0])
+            TextChannelMemberDict[MemberName] = data
+         
+    df = pd.DataFrame(columns=TextChannelNameList)
+
+    for name in TextChannelMemberDict:
+        data = []
+        for role in TextChannelNameList:
+            if role in TextChannelMemberDict[name]:
+                data.append(1)
+            else:
+                data.append(0)
+        data[0] = name
+        df.loc[len(df.index)] = data
+
+    df = df.sort_values(by=["Name"])
+    csv_name = "members_in_channels.csv"
+    df.to_csv(f"data/{csv_name}", index=False)
+    print(f"success save file {csv_name}")
 
 client.run(DISCORD_TOKEN)
+
